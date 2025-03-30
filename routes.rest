@@ -1,0 +1,49 @@
+// LOCALHOST
+### Get all users
+GET http://localhost:3000/users
+
+###
+# Get a contact by ID
+GET https://localhost:3000/users/67cebb692febcfd73db189e9
+
+###
+
+# create contact
+GET https://localhost:3000/users HTTP/1.1
+{
+"email":"adebensonkehinde@gmail.com",
+"username":"MichaelBenson",
+"name":"Michael Benson",
+"ip_address":"94.121.168.53"
+}
+###
+
+### PUT contact
+POST https://cse-341-project-1-cqsf.onrender.com HTTP/1.1
+Content-Type: application/json
+
+{
+  "_id": "67cebb692febcfd73db189e9",
+  "email": "adebensonkehinde@gmail.com",
+  "username": "MichaelBenson",
+  "name": "Michael Benson",
+  "ip_address": "94.121.168.53"
+}
+
+###
+
+# Test PUT (Update contact)
+PUT https://cse-341-project-1-cqsf.onrender.com HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "updatedemail@example.com",
+  "username": "UpdatedMichael",
+  "name": "Michael Benson Updated",
+  "ip_address": "192.168.1.1"
+}
+
+###
+
+# Test DELETE a contact
+DELETE https://cse-341-project-1-cqsf.onrender.com HTTP/1.1

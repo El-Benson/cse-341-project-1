@@ -1,58 +1,58 @@
-const express = require('express');
+const express = require("express");
+const Contact = require("../models/contact");
 const router = express.Router();
 
-// Sample data
-const contacts = [
-  {
-    _id: "67cebb692febcfd73db189e9",
-    email: "adebensonkehinde@gmail.com",
-    username: "MichaelBenson",
-    name: "Michael Benson",
-    ip_address: "94.121.168.53"
-  }
-];
-
 // GET all contacts
-router.get('/', (req, res) => {
-  res.json(contacts);
+router.get("/", async (req, res) => {
+  try {
+    const contacts = await Contact.find();
+    res.json(contacts);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 // GET a single contact by ID
-router.get('/:id', (req, res) => {
-  const contact = contacts.find(c => c._id === req.params.id);
-  if (contact) {
+router.get("/:id", async (req, res) => {
+  try {
+    const contact = await Contact.findById(req.params.id);
+    if (!contact) return res.status(404).json({ message: "Contact not found" });
     res.json(contact);
-  } else {
-    res.status(404).json({ message: 'Contact not found' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
 // POST a new contact
-router.post('/', (req, res) => {
-  const newContact = req.body;
-  contacts.push(newContact);
-  res.status(201).json(newContact);
+router.post("/", async (req, res) => {
+  try {
+    const newContact = new Contact(req.body);
+    const savedContact = await newContact.save();
+    res.status(201).json(savedContact);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 });
 
 // PUT (Update contact)
-router.put('/:id', (req, res) => {
-  const index = contacts.findIndex(c => c._id === req.params.id);
-  if (index !== -1) {
-    contacts[index] = { ...contacts[index], ...req.body };
-    res.json(contacts[index]);
-  } else {
-    res.status(404).json({ message: 'Contact not found' });
+router.put("/:id", async (req, res) => {
+  try {
+    const updatedContact = await Contact.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedContact) return res.status(404).json({ message: "Contact not found" });
+    res.json(updatedContact);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 });
 
 // DELETE a contact
-router.delete('/:id', (req, res) => {
-  const index = contacts.findIndex(c => c._id === req.params.id);
-  if (index !== -1) {
-    contacts.splice(index, 1);
-    res.json({ message: 'Contact deleted' });
-  } else {
-    res.status(404).json({ message: 'Contact not found' });
+router.delete("/:id", async (req, res) => {
+  try {
+    const deletedContact = await Contact.findByIdAndDelete(req.params.id);
+    if (!deletedContact) return res.status(404).json({ message: "Contact not found" });
+    res.json({ message: "Contact deleted" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
